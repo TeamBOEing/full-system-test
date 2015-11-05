@@ -16,8 +16,9 @@
 const unsigned int SPEED = 250;
 const unsigned int DRIVE_TIME = 500;
 const unsigned int TURN_TIME = 50;
-const unsigned int LIGHT_READ_SINGLE = 75;
-const unsigned int LIGHT_READ_BOTH = 250;
+const unsigned int TURN_TIME_2 = 250;
+const unsigned int LIGHT_READ_SINGLE = 800;
+const unsigned int LIGHT_READ_BOTH = 1600;
 const float LIGHT_RATIO_LEFT = 0.7;
 const float LIGHT_RATIO_RIGHT = 1.3;
 
@@ -68,15 +69,15 @@ void loop() {
     // Obstacle detection
     if( leftObstacle() && rightObstacle() ) {
       driveBack(SPEED, DRIVE_TIME);
-      turnLeft(SPEED, TURN_TIME);
+      turnLeft(SPEED, TURN_TIME_2);
     }
     else if ( leftObstacle() ) {
       driveBack(SPEED, DRIVE_TIME);
-      turnRight(SPEED, TURN_TIME);
+      turnRight(SPEED, TURN_TIME_2);
     }
     else if ( rightObstacle() ) {
       driveBack(SPEED, DRIVE_TIME);
-      turnLeft(SPEED, TURN_TIME);
+      turnLeft(SPEED, TURN_TIME_2);
     } // End of obstacle detection
     
     driveForw(SPEED, DRIVE_TIME);
@@ -86,16 +87,16 @@ void loop() {
       leftLight = getLeftLight();
       rightLight = getRightLight();
       
-      if ( (leftLight < LIGHT_READ_SINGLE) ||
-           (rightLight < LIGHT_READ_SINGLE) ||
-           ( (leftLight+rightLight) < LIGHT_READ_BOTH) ) {
+      if ( (leftLight > LIGHT_READ_SINGLE) ||
+           (rightLight > LIGHT_READ_SINGLE) ||
+           ( (leftLight+rightLight) > LIGHT_READ_BOTH) ) {
         continueBot = false;
       }
       else {
-        if ( (leftLight / rightLight) < LIGHT_RATIO_LEFT) {
+        if ( (leftLight / rightLight) > LIGHT_RATIO_LEFT) {
           turnLeft(SPEED, TURN_TIME);
         }
-        else if ( (leftLight / rightLight) > LIGHT_RATIO_RIGHT) {
+        else if ( (leftLight / rightLight) < LIGHT_RATIO_RIGHT) {
           turnRight(SPEED, TURN_TIME);
         }
         else {
